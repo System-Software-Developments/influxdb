@@ -13,9 +13,11 @@ import {
 
 // Actions
 import {saveAndExecuteQueries} from 'src/timeMachine/actions/queries'
+import {notify} from 'src/shared/actions/notifications'
 
 // Utils
 import {getActiveTimeMachine, getActiveQuery} from 'src/timeMachine/selectors'
+import {queryCancelRequest} from 'src/shared/copy/notifications'
 
 // Types
 import {RemoteDataState} from 'src/types'
@@ -28,6 +30,7 @@ interface StateProps {
 
 interface DispatchProps {
   onSubmit: typeof saveAndExecuteQueries | (() => void)
+  onNotify: typeof notify
 }
 
 interface OwnProps {
@@ -45,8 +48,21 @@ class SubmitQueryButton extends PureComponent<Props> {
   }
 
   public render() {
-    const {text, icon, testID} = this.props
+    const {text, queryStatus, icon, testID} = this.props
 
+    if (queryStatus === RemoteDataState.Loading) {
+      return (
+        <Button
+          text="Cancel"
+          icon={icon}
+          size={ComponentSize.Small}
+          status={ComponentStatus.Default}
+          onClick={() => this.handleCancelClick()}
+          color={ComponentColor.Danger}
+          testID={testID}
+        />
+      )
+    }
     return (
       <Button
         text={text}
@@ -74,8 +90,19 @@ class SubmitQueryButton extends PureComponent<Props> {
     return ComponentStatus.Default
   }
 
+  private abortController: AbortController
+
   private handleClick = (): void => {
-    this.props.onSubmit()
+    // We need to instantiate a new AbortController per request
+    // In order to allow for requests after cancellations:
+    // https://stackoverflow.com/a/56548348/7963795
+    this.abortController = new AbortController()
+    this.props.onSubmit(this.abortController)
+  }
+
+  private handleCancelClick = (): void => {
+    this.props.onNotify(queryCancelRequest())
+    this.abortController.abort()
   }
 }
 
@@ -90,6 +117,7 @@ const mstp = (state: AppState) => {
 
 const mdtp = {
   onSubmit: saveAndExecuteQueries,
+  onNotify: notify,
 }
 
 export default connect<StateProps, DispatchProps>(

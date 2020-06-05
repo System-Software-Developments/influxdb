@@ -106,7 +106,10 @@ const isFromBucket = (node: Node) => {
   )
 }
 
-export const executeQueries = () => async (dispatch, getState: GetState) => {
+export const executeQueries = (abortController?: AbortController) => async (
+  dispatch,
+  getState: GetState
+) => {
   const state = getState()
 
   const allBuckets = getAll<Bucket>(state, ResourceType.Buckets)
@@ -148,10 +151,14 @@ export const executeQueries = () => async (dispatch, getState: GetState) => {
 
       const extern = buildVarsOption(variableAssignments)
 
-      return runQuery(orgID, text, extern)
+      return runQuery(orgID, text, extern, abortController)
     })
+    const results = await Promise.all(pendingResults.map(r => r.promise)).catch(
+      error => {
+        throw error
+      }
+    )
 
-    const results = await Promise.all(pendingResults.map(r => r.promise))
     const duration = window.performance.now() - startTime
 
     let statuses = [[]] as StatusRow[][]
@@ -194,13 +201,14 @@ export const executeQueries = () => async (dispatch, getState: GetState) => {
     dispatch(
       setQueryResults(RemoteDataState.Done, files, duration, null, statuses)
     )
-  } catch (e) {
-    if (e.name === 'CancellationError') {
+  } catch (error) {
+    if (error.name === 'CancellationError') {
+      dispatch(setQueryResults(RemoteDataState.Done, null, null))
       return
     }
 
-    console.error(e)
-    dispatch(setQueryResults(RemoteDataState.Error, null, null, e.message))
+    console.error(error)
+    dispatch(setQueryResults(RemoteDataState.Error, null, null, error.message))
   }
 }
 
@@ -212,9 +220,11 @@ const saveDraftQueries = (): SaveDraftQueriesAction => ({
   type: 'SAVE_DRAFT_QUERIES',
 })
 
-export const saveAndExecuteQueries = () => dispatch => {
+export const saveAndExecuteQueries = (
+  abortController?: AbortController
+) => dispatch => {
   dispatch(saveDraftQueries())
-  dispatch(executeQueries())
+  dispatch(executeQueries(abortController))
 }
 
 export const executeCheckQuery = () => async (dispatch, getState: GetState) => {

@@ -529,6 +529,11 @@ export const resourceLimitReached = (resourceName: string): Notification => ({
   type: 'resourceLimitReached',
 })
 
+export const queryCancelRequest = (): Notification => ({
+  ...defaultSuccessNotification,
+  message: `Query cancellation request successful - query cancellation now in progress`,
+})
+
 export const taskNotCreated = (additionalMessage: string): Notification => ({
   ...defaultErrorNotification,
   message: `Failed to create new task: ${additionalMessage}`,
