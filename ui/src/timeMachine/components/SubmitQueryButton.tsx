@@ -30,7 +30,7 @@ interface StateProps {
 
 interface DispatchProps {
   onSubmit: typeof saveAndExecuteQueries | (() => void)
-  onNotify: typeof notify
+  onNotify: typeof notify | (() => void)
 }
 
 interface OwnProps {

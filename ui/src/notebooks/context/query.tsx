@@ -21,6 +21,10 @@ export interface QueryContextType {
   query: (text: string) => Promise<BothResults>
 }
 
+export interface QueryContextType {
+  query: (text: string) => Promise<BothResults>
+}
+
 export const DEFAULT_CONTEXT: QueryContextType = {
   query: () => Promise.resolve({} as BothResults),
 }
@@ -28,6 +32,18 @@ export const DEFAULT_CONTEXT: QueryContextType = {
 export const QueryContext = React.createContext<QueryContextType>(
   DEFAULT_CONTEXT
 )
+
+export interface SubmitQueryButtonContextType {
+  onNotify: () => void
+}
+
+export const DEFAULT_SUBMIT_BTN_CONTEXT: SubmitQueryButtonContextType = {
+  onNotify: () => {},
+}
+
+export const SubmitQueryButtonContext = React.createContext<
+  SubmitQueryButtonContextType
+>(DEFAULT_SUBMIT_BTN_CONTEXT)
 
 type Props = StateProps
 export const QueryProvider: FC<Props> = ({children, variables, org}) => {

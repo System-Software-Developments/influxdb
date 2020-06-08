@@ -4,6 +4,7 @@ import {SubmitQueryButton} from 'src/timeMachine/components/SubmitQueryButton'
 import QueryProvider, {
   QueryContext,
   BothResults,
+  SubmitQueryButtonContext,
 } from 'src/notebooks/context/query'
 import {NotebookContext, PipeMeta} from 'src/notebooks/context/notebook'
 import {TimeContext} from 'src/notebooks/context/time'
@@ -17,6 +18,7 @@ const COMMENT_REMOVER = /(\/\*([\s\S]*?)\*\/)|(\/\/(.*)$)/gm
 
 export const Submit: FC = () => {
   const {query} = useContext(QueryContext)
+  const {onNotify} = useContext(SubmitQueryButtonContext)
   const {id, pipes, updateResult, updateMeta} = useContext(NotebookContext)
   const {timeContext} = useContext(TimeContext)
   const time = timeContext[id]
@@ -83,6 +85,7 @@ export const Submit: FC = () => {
   return (
     <SubmitQueryButton
       text="Run Flow"
+      onNotify={onNotify}
       icon={IconFont.Play}
       submitButtonDisabled={false}
       queryStatus={RemoteDataState.NotStarted}
