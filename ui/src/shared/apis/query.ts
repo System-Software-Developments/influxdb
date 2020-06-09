@@ -33,12 +33,12 @@ export interface RunQueryErrorResult {
   code?: string
 }
 
-export const runQuery = (
+export const getQueryResult = (
   orgID: string,
   query: string,
   extern?: File,
   abortController?: AbortController
-): CancelBox<RunQueryResult> => {
+): Promise<Response> => {
   const url = `${API_BASE_PATH}api/v2/query?${new URLSearchParams({orgID})}`
 
   const headers = {
@@ -54,14 +54,23 @@ export const runQuery = (
 
   const controller = abortController || new AbortController()
 
-  const request = fetch(url, {
+  return fetch(url, {
     method: 'POST',
     headers,
     body: JSON.stringify(body),
     signal: controller.signal,
   })
+}
 
-  const promise = request
+export const runQuery = (
+  orgID: string,
+  query: string,
+  extern?: File,
+  abortController?: AbortController
+): CancelBox<RunQueryResult> => {
+  const controller = abortController || new AbortController()
+
+  const promise = getQueryResult(orgID, query, extern, controller)
     .then(processResponse)
     .catch(e =>
       e.name === 'AbortError'
