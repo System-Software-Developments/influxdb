@@ -12,7 +12,10 @@ import {
 } from '@influxdata/clockface'
 
 // Actions
-import {saveAndExecuteQueries} from 'src/timeMachine/actions/queries'
+import {
+  saveAndExecuteQueries,
+  setQueryToLoading,
+} from 'src/timeMachine/actions/queries'
 import {notify} from 'src/shared/actions/notifications'
 
 // Utils
@@ -29,6 +32,7 @@ interface StateProps {
 }
 
 interface DispatchProps {
+  setQueryToLoading: typeof setQueryToLoading
   onSubmit: typeof saveAndExecuteQueries | (() => void)
   onNotify: typeof notify | (() => void)
 }
@@ -93,6 +97,9 @@ class SubmitQueryButton extends PureComponent<Props> {
   private abortController: AbortController
 
   private handleClick = (): void => {
+    // Optimistic UI, set the state to loading when the event
+    // happens rather than when the event trickles down to execution
+    this.props.setQueryToLoading()
     // We need to instantiate a new AbortController per request
     // In order to allow for requests after cancellations:
     // https://stackoverflow.com/a/56548348/7963795
@@ -118,6 +125,7 @@ const mstp = (state: AppState) => {
 const mdtp = {
   onSubmit: saveAndExecuteQueries,
   onNotify: notify,
+  setQueryToLoading: setQueryToLoading,
 }
 
 export default connect<StateProps, DispatchProps>(
