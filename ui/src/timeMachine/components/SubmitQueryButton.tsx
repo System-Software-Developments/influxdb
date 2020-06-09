@@ -32,7 +32,7 @@ interface StateProps {
 }
 
 interface DispatchProps {
-  setQueryToLoading: typeof setQueryToLoading
+  setQueryToLoading: typeof setQueryToLoading | (() => void)
   onSubmit: typeof saveAndExecuteQueries | (() => void)
   onNotify: typeof notify | (() => void)
 }

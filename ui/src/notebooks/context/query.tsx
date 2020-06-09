@@ -35,10 +35,12 @@ export const QueryContext = React.createContext<QueryContextType>(
 
 export interface SubmitQueryButtonContextType {
   onNotify: () => void
+  setQueryToLoading: () => void
 }
 
 export const DEFAULT_SUBMIT_BTN_CONTEXT: SubmitQueryButtonContextType = {
   onNotify: () => {},
+  setQueryToLoading: () => {},
 }
 
 export const SubmitQueryButtonContext = React.createContext<

@@ -18,7 +18,7 @@ const COMMENT_REMOVER = /(\/\*([\s\S]*?)\*\/)|(\/\/(.*)$)/gm
 
 export const Submit: FC = () => {
   const {query} = useContext(QueryContext)
-  const {onNotify} = useContext(SubmitQueryButtonContext)
+  const {onNotify, setQueryToLoading} = useContext(SubmitQueryButtonContext)
   const {id, pipes, updateResult, updateMeta} = useContext(NotebookContext)
   const {timeContext} = useContext(TimeContext)
   const time = timeContext[id]
@@ -86,6 +86,7 @@ export const Submit: FC = () => {
     <SubmitQueryButton
       text="Run Flow"
       onNotify={onNotify}
+      setQueryToLoading={setQueryToLoading}
       icon={IconFont.Play}
       submitButtonDisabled={false}
       queryStatus={RemoteDataState.NotStarted}
