@@ -106,7 +106,7 @@ const isFromBucket = (node: Node) => {
   )
 }
 
-export const setQueryToLoading = () => async dispatch => {
+export const setQueryToLoading = () => dispatch => {
   dispatch(setQueryResults(RemoteDataState.Loading, [], null))
 }
 
