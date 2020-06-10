@@ -71,28 +71,13 @@ describe('Shared.APIs.Query.GetQueryResult', () => {
   it('Should allow queries to be cancellable with abortController', () => {
     const abortController = new AbortController()
     abortController.abort()
-    expect(() => getQueryResult(orgID, query, extern, abortController)).toThrow(
+    expect(() => getQueryResult(orgID, query, abortController, extern)).toThrow(
       'The operation was aborted.'
     )
   })
   it("Should not allow queries to be cancelled if they've already resolved", async () => {
     const abortController = new AbortController()
-    const promise = getQueryResult(orgID, query, extern, abortController)
-
-    expect(promise).toBeInstanceOf(Promise)
-
-    abortController.abort()
-    const resolved = await promise
-    expect(resolved).not.toBeInstanceOf(Promise)
-    expect(resolved.status).toBe(200)
-  })
-  it('Should not allow queries to be cancelled if the abortController has not been passed in', async () => {
-    const abortController = new AbortController()
-    abortController.abort()
-    const promise = getQueryResult(orgID, query, extern)
-    expect(() =>
-      getQueryResult(orgID, query, extern, abortController)
-    ).not.toThrow('AbortError: The operation was aborted.')
+    const promise = getQueryResult(orgID, query, abortController, extern)
 
     expect(promise).toBeInstanceOf(Promise)
 
