@@ -61,7 +61,7 @@ class SubmitQueryButton extends PureComponent<Props> {
           icon={icon}
           size={ComponentSize.Small}
           status={ComponentStatus.Default}
-          onClick={() => this.handleCancelClick()}
+          onClick={this.handleCancelClick}
           color={ComponentColor.Danger}
           testID={testID}
         />
@@ -109,7 +109,9 @@ class SubmitQueryButton extends PureComponent<Props> {
 
   private handleCancelClick = (): void => {
     this.props.onNotify(queryCancelRequest())
-    this.abortController.abort()
+    if (this.abortController) {
+      this.abortController.abort()
+    }
   }
 }
 

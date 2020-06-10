@@ -38,14 +38,14 @@ export interface SubmitQueryButtonContextType {
   setQueryToLoading: () => void
 }
 
-export const DEFAULT_SUBMIT_BTN_CONTEXT: SubmitQueryButtonContextType = {
+const defaultSubmitBtnContext: SubmitQueryButtonContextType = {
   onNotify: () => {},
   setQueryToLoading: () => {},
 }
 
 export const SubmitQueryButtonContext = React.createContext<
   SubmitQueryButtonContextType
->(DEFAULT_SUBMIT_BTN_CONTEXT)
+>(defaultSubmitBtnContext)
 
 type Props = StateProps
 export const QueryProvider: FC<Props> = ({children, variables, org}) => {
