@@ -42,13 +42,10 @@ describe('TimeMachine.Components.SubmitQueryButton', () => {
       expect(getByTitle('Submit')).toBeTruthy()
     })
     it('allows the query to be cancelled after submission', async () => {
-      const {getByTitle, getByText} = renderWithRedux(
-        <SubmitQueryButton />,
-        s => ({
-          ...s,
-          ...stateOverride,
-        })
-      )
+      const {getByTitle} = renderWithRedux(<SubmitQueryButton />, s => ({
+        ...s,
+        ...stateOverride,
+      }))
 
       const SubmitBtn = getByTitle('Submit')
       fireEvent.click(SubmitBtn)
