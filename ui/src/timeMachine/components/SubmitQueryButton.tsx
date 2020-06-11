@@ -23,8 +23,7 @@ import {getActiveTimeMachine, getActiveQuery} from 'src/timeMachine/selectors'
 import {queryCancelRequest} from 'src/shared/copy/notifications'
 
 // Types
-import {RemoteDataState} from 'src/types'
-import {AppState} from 'src/types'
+import {AppState, RemoteDataState} from 'src/types'
 
 interface StateProps {
   submitButtonDisabled: boolean
